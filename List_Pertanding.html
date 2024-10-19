@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badminton Advent | List Pertadingan</title>
+
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="./css/loading_spinner.css">
+  <style>
+    .card-custom {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card-custom:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body style="background-image: url('./img/blob.svg'); height: 100vh; background-size: cover;">
+  <div id="loading_content" class="loading" style="display: block;">
+    <div class="lds-spinner">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <h6 class="mb-0">loading...</h6>
+  </div>
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparant">
+    <div class="container">
+      <h6>
+        <a class="navbar-brand" href="#">Badminton System</a>
+      </h6>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item d-sm-none">
+            <a class="nav-link active" href="#">Tanding</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Pemain</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Bola Kok</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Lapangan</a>
+          </li>
+        </ul>
+        <a href="index.html" class="btn btn-outline-primary" type="button">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <hr>
+    <div class="pb-2">
+      <a href="Home.html" style="text-decoration: none;"><i class='bx bx-arrow-back'></i> Kembali</a>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <h6 class="m-0">Tanggal: <span id="tanggal_tanding"></span></h6>
+          </div>
+          <div class="col-md-6 mb-2 text-md-end text-start">
+            <h6 class="m-0">Gor/Lapangan: <span id="gor_lapangan"></span></h6>
+          </div>
+        </div>
+        <button id="hapus_data_tanding" class="btn btn-danger btn-sm">Hapus <i class='bx bx-trash'></i></button>
+      </div>
+    </div>
+
+    <h6 class="mb-3"><u>Pertandingan Berlangsung:</u></h6>
+
+    <div id="row_daftar_pertanding" class="row"></div>
+  </div>
+  
+  <div class="modal fade" id="modalAddMorePertandingan" tabindex="-1" aria-labelledby="modalAddMorePertandinganLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Pertandingan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitAddPertanding">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label class="form-label mb-1">Tim-1</label>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-1">
+                      <label for="pemain1_tim1" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="pemain1_tim1" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="pemain2_tim1" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="pemain2_tim1" required>
+                        <option value="" value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label class="form-label mb-1">Tim-2</label>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-1">
+                      <label for="pemain1_tim2" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="pemain1_tim2" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="pemain2_tim2" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="pemain2_tim2" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-2">
+                <label for="tipe_score_permainan" class="form-label mb-1">Tipe Permainan</label>
+                <select class="form-select" id="tipe_score_permainan" required>
+                  <option value="" selected>Pilih Tipe Skor</option>
+                  <option value="Bola Kedua">Bola Kedua</option>
+                  <option value="Reli">Reli</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="wasit_pertadingan" class="form-label mb-1">Wasit Pertandingan</label>
+                <input type="text" class="form-control" id="wasit_pertadingan" placeholder="Masukkan nama wasit">
+              </div>
+              
+              <div class="col-md-12">
+                <label class="form-label mb-1">Bola Kok</label>
+                <div id="list_select_bola"></div>
+                <div class="text-end">
+                  <a href="javascript:void(0)" id="btn_tambah_row_bola"><i class='bx bx-plus fs-5' style="line-height: 0;"></i> Tambah bola</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalUpdateMorePertandingan" tabindex="-1" aria-labelledby="modalUpdateMorePertandinganLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detail Pertandingan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitUpdatePertanding">
+          <div class="modal-body">
+            <input type="hidden" id="up_doc_id_pertandingan">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label class="form-label mb-1">Tim-1</label>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-1">
+                      <label for="up_pemain1_tim1" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="up_pemain1_tim1" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div class="mb-1">
+                      <label for="up_pemain2_tim1" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="up_pemain2_tim1" required>
+                        <option value="" value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="up_skor_tim1" class="form-label mb-1">Skor</label>
+                      <input type="number" id="up_skor_tim1" class="form-control" min="0" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label class="form-label mb-1">Tim-2</label>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="mb-1">
+                      <label for="up_pemain1_tim2" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="up_pemain1_tim2" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div class="mb-1">
+                      <label for="up_pemain2_tim2" class="form-label mb-1">Pemain</label>
+                      <select class="form-select select_opt_pemain" id="up_pemain2_tim2" required>
+                        <option value="" selected>Pilih Pemain</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="up_skor_tim2" class="form-label mb-1">Skor</label>
+                      <input type="number" id="up_skor_tim2" class="form-control" min="0" value="0">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-2">
+                <label for="up_tipe_score_permainan" class="form-label mb-1">Tipe Permainan</label>
+                <select class="form-select" id="up_tipe_score_permainan" required>
+                  <option value="" selected>Pilih Tipe Skor</option>
+                  <option value="Bola Kedua">Bola Kedua</option>
+                  <option value="Reli">Reli</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="up_wasit_pertadingan" class="form-label mb-1">Wasit Pertandingan</label>
+                <input type="text" class="form-control" id="up_wasit_pertadingan" placeholder="Masukkan nama wasit">
+              </div>
+              
+              <div class="col-md-12">
+                <label class="form-label mb-1">Bola Kok</label>
+                <div id="up_list_select_bola">
+                </div>
+                <div class="text-end">
+                  <a href="javascript:void(0)" id="up_btn_tambah_row_bola"><i class='bx bx-plus fs-5' style="line-height: 0;"></i> Tambah bola</a>
+                </div>
+
+                <hr>
+              </div>
+
+              <div class="col-md-6 mb-2">
+                <label for="up_pemenang" class="form-label mb-1">Pemenang Pertandingan</label>
+                <select class="form-select" id="up_pemenang" required>
+                  <option value="" selected>Pilih Tim Pemenang</option>
+                  <option value="1">Tim 1</option>
+                  <option value="2">Tim 2</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="up_status_bayar" class="form-label mb-1">Status Pembayaran</label>
+                <select class="form-select" id="up_status_bayar" required>
+                  <option value="" selected>Pilih Sattus Bayar</option>
+                  <option value="0">Belum Lunas</option>
+                  <option value="1">SUdah Lunas</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="up_hapus_pertandingan" type="button" class="btn btn-danger">Hapus</button>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1">
+    <div id="toastNotif" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <div id="msgToast"></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  <script src="./js/functions.js"></script>
+  <script src="./js/bootstrap.bundle.min.js"></script>
+  <script>
+    function clearModalAddPertandingan(){
+      const formAddPertandingan = document.getElementById('submitAddPertanding');
+
+      formAddPertandingan.querySelector('#pemain1_tim1').value = '';
+      formAddPertandingan.querySelector('#pemain2_tim1').value = '';
+      formAddPertandingan.querySelector('#pemain1_tim2').value = '';
+      formAddPertandingan.querySelector('#pemain2_tim2').value = '';
+      formAddPertandingan.querySelector('#tipe_score_permainan').value = '';
+      formAddPertandingan.querySelector('#wasit_pertadingan').value = '';
+    }
+  </script>
+  <script type="module">
+    import halpers from './js/halpers.js';
+    import { config } from './js/firebase_config.js';
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, where, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Initialize Firebase
+    const app = initializeApp(config);
+    const dbFirestore = getFirestore(app);
+
+    const tandingRefs = collection(dbFirestore, 'tanding');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const documentId = urlParams.get('documentid');
+
+    var modalAddMoreTanding = new bootstrap.Modal(document.getElementById('modalAddMorePertandingan'));
+    var modalUpdateMoreTanding = new bootstrap.Modal(document.getElementById('modalUpdateMorePertandingan'));
+    const formAddPertandingan = document.getElementById('submitAddPertanding');
+    const formUpdatePertandingan = document.getElementById('submitUpdatePertanding');
+    var list_select_bola = formAddPertandingan.querySelector('#list_select_bola');
+    let up_list_select_bola = formUpdatePertandingan.querySelector('#up_list_select_bola');
+    
+    let listMasterSelectBoll = [];
+    const mBolaRefs = collection(dbFirestore, 'm_bola');
+    onSnapshot(mBolaRefs, (snapshot) => {
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        listMasterSelectBoll.push(data);
+      });
+    });
+    
+    const mPemainRefs = collection(dbFirestore, 'm_pemain');
+    onSnapshot(mPemainRefs, (snapshot) => {
+      const allSelectPemain = document.querySelectorAll('.select_opt_pemain');
+      allSelectPemain.forEach(selectElement => {
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const newOpt = `<option value="${data.name}">${data.name}</option>`;
+          selectElement.innerHTML += newOpt;
+        });
+      });
+    });
+
+    if (documentId){
+      actionLoading('show');
+
+      const tanggal_tanding = document.getElementById('tanggal_tanding');
+      const gor_lapangan = document.getElementById('gor_lapangan');
+      const docRef = doc(tandingRefs, documentId);
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        tanggal_tanding.innerHTML = data.tanggal;
+        gor_lapangan.innerHTML = data.gor_lapangan;
+
+        const matchDetailsRef = collection(docRef, 'daftar_tanding');
+
+        onSnapshot(matchDetailsRef, (snapshot) => {
+          const rowContent = document.getElementById('row_daftar_pertanding');
+          const firstRow = `
+            <div class="col-md-3 mb-3 d-flex flex-column">
+              <div id="cardAddMorePertandingan" class="card card-custom text-center" style="cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                  <div>
+                    <i class='bx bx-add-to-queue fs-2'></i>
+                    <div>Tambah</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          rowContent.innerHTML = firstRow;
+
+          snapshot.docs.forEach(doc => {
+            const data = doc.data();
+
+            let totalPriceKok = 0;
+            let textListKok = '';
+            data.list_kok.forEach(x => {
+              const subtotalx = x.price*x.qty;
+              totalPriceKok += subtotalx;
+              textListKok += `<p class="m-0" style="font-size: 13px;">- ${x.name} ${x.price}x${x.qty} = ${subtotalx}</p>`;
+            })
+            const cardTemplate = `
+              <div class="col-md-3 mb-3 d-flex flex-column">
+                <a href="javascript:void(0)" 
+                docId="${doc.id}" p1tim1="${data.p1tim1}" p2tim1="${data.p2tim1}" p1tim2="${data.p1tim2}" p2tim2="${data.p2tim2}" skor_tim1="${data.skor_tim1}" skor_tim2="${data.skor_tim2}" 
+                tipe_scor="${data.tipe_scor}" wasit="${data.wasit}" list_kok='${JSON.stringify(data.list_kok)}' pemenang="${data.pemenang}" status_bayar="${data.status_bayar}" tim_pemenang="${data.tim_pemenang}"
+                class="card card-custom text-dark modal_update_detail_pertandingan" style="text-decoration: none; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                  <div class="card-body">
+                    <div class="mb-1">Tim 1: <b>${data.p1tim1} & ${data.p2tim1} (${data.skor_tim1 || 0})</b></div>
+                    <div class="mb-1">Tim 2: <b>${data.p1tim2} & ${data.p2tim2} (${data.skor_tim2 || 0})</b></div>
+                    <div class="mb-1">Wasit: ${data.wasit || '-'}</div>
+                    <div class="mb-1">
+                      <u>Bola Kok: <b>Rp ${totalPriceKok}</b></u>
+                      ${textListKok}
+                    </div>
+                    <div class="mb-1"><b><u>Pemenang: ${data.pemenang || '(?)'}</u></b></div>
+                    <div>Pembayaran: <span class="badge ${data.status_bayar == true ? 'bg-success' : 'bg-danger'}">${data.status_bayar == true ? 'LUNAS' : 'BELUM LUNAS'}</span></div>
+                  </div>
+                </a>
+              </div>
+            `;
+
+            rowContent.innerHTML += cardTemplate;
+          });
+          
+          var openModalBtn = document.getElementById('cardAddMorePertandingan');
+          openModalBtn.addEventListener('click', function () {
+            modalAddMoreTanding.show();
+            clearModalAddPertandingan();
+          
+            list_select_bola.innerHTML = '';
+            const selectBola = document.createElement('select');
+            selectBola.id = 'select_bola0';
+            selectBola.className = 'form-select select_master_bola';
+            selectBola.required = true;
+
+            const defaultOption = document.createElement('option');
+            defaultOption.textContent = 'Pilih Bola';
+            defaultOption.selected = true;
+            selectBola.appendChild(defaultOption);
+          
+            listMasterSelectBoll.forEach(y => {
+              const option = document.createElement('option');
+              option.value = y.price;
+              option.textContent = y.name;
+              selectBola.appendChild(option);
+            });
+          
+            // Buat elemen baru untuk row
+            const newElement = document.createElement('div');
+            newElement.id = 'row_select_bola0';
+            newElement.className = 'mb-2 row_select_bola';
+            newElement.innerHTML = `
+              <div class="d-flex align-items-center">
+                <div class="w-100">${selectBola.outerHTML}</div>
+                <div class="mx-2">x</div>
+                <div>
+                  <input type="number" min="1" value="1" id="qty_bola0" class="form-control">
+                </div>
+              </div>
+            `;
+          
+            // Tambahkan elemen baru ke list_select_bola
+            list_select_bola.appendChild(newElement);
+          });          
+        
+          var cardDetailPertandingan = document.getElementsByClassName("modal_update_detail_pertandingan");
+          for (var i = 0; i < cardDetailPertandingan.length; i++) {
+            const elm = cardDetailPertandingan[i];
+            elm.addEventListener('click', async function(event){
+              event.preventDefault();
+
+              const attr_docId = elm.getAttribute('docId');
+              const attr_p1tim1 = elm.getAttribute('p1tim1');
+              const attr_p2tim1 = elm.getAttribute('p2tim1');
+              const attr_p1tim2 = elm.getAttribute('p1tim2');
+              const attr_p2tim2 = elm.getAttribute('p2tim2');
+              const attr_skor_tim1 = elm.getAttribute('skor_tim1');
+              const attr_skor_tim2 = elm.getAttribute('skor_tim2');
+              const attr_tipe_scor = elm.getAttribute('tipe_scor');
+              const attr_wasit = elm.getAttribute('wasit');
+              const attr_list_kok = elm.getAttribute('list_kok');
+              const attr_pemenang = elm.getAttribute('pemenang');
+              const attr_status_bayar = elm.getAttribute('status_bayar');
+              const attr_tim_pemenang = elm.getAttribute('tim_pemenang');
+                
+              formUpdatePertandingan.querySelector('#up_doc_id_pertandingan').value = attr_docId;
+
+              formUpdatePertandingan.querySelector('#up_pemain1_tim1').value = attr_p1tim1;
+              formUpdatePertandingan.querySelector('#up_pemain2_tim1').value = attr_p2tim1;
+              formUpdatePertandingan.querySelector('#up_pemain1_tim2').value = attr_p1tim2;
+              formUpdatePertandingan.querySelector('#up_pemain2_tim2').value = attr_p2tim2;
+
+              formUpdatePertandingan.querySelector('#up_tipe_score_permainan').value = attr_tipe_scor;
+              formUpdatePertandingan.querySelector('#up_wasit_pertadingan').value = attr_wasit;
+
+              formUpdatePertandingan.querySelector('#up_pemenang').value = attr_tim_pemenang != 'null' ? attr_tim_pemenang : '';
+              formUpdatePertandingan.querySelector('#up_status_bayar').value = attr_status_bayar == 'true' ? '1' : '0';
+
+              up_list_select_bola.innerHTML = '';
+              const detailListSeletBola = JSON.parse(attr_list_kok);
+              detailListSeletBola.forEach((x, i) => {
+                let optSelectBola = '<option selected>Pilih Bola</option>';
+                listMasterSelectBoll.forEach(y => {
+                  optSelectBola += `<option ${y.name == x.name && 'selected'} value="${y.price}">${y.name}</option>`;
+                });
+
+                let elmRemove = '';
+                if(i>0){
+                  elmRemove = `
+                    <div>
+                      <a id="up_btn_remove_row_bola${i}" href="javascript:void(0)">
+                        <i class='bx bx-x-circle fs-4 text-danger'></i>
+                      </a>
+                    </div>
+                  `;
+                }
+
+                const newSelectBoleUpdate = document.createElement('div');
+                newSelectBoleUpdate.id = `up_row_select_bola${i}`;
+                newSelectBoleUpdate.className = 'mb-2 up_row_select_bola';
+                newSelectBoleUpdate.innerHTML = `
+                  <div class="d-flex align-items-center">
+                    <div class="w-100">
+                      <select id="up_select_bola${i}" class="form-select select_master_bola" required>${optSelectBola}</select>
+                    </div>
+                    <div class="mx-2">x</div>
+                    <div class="me-2">
+                      <input type="number" min="1" value="1" id="up_qty_bola${i}" class="form-control">
+                    </div>
+                    ${elmRemove}
+                  </div>
+                `;
+
+                up_list_select_bola.appendChild(newSelectBoleUpdate);
+
+                if(i>0) document.getElementById(`up_btn_remove_row_bola${i}`).addEventListener('click', function(evt2) {
+                  document.getElementById(`up_row_select_bola${i}`).remove();
+                });
+              });
+              
+              modalUpdateMoreTanding.show();
+            });
+          }
+        });
+
+        document.getElementById('btn_tambah_row_bola').addEventListener('click', function (event) {
+          event.preventDefault();
+
+          const length = formAddPertandingan.querySelectorAll('.row_select_bola').length;
+        
+          // Buat elemen select dan opsi
+          const selectBola = document.createElement('select');
+          selectBola.id = `select_bola${length}`;
+          selectBola.className = 'form-select select_master_bola';
+          selectBola.required = true;
+        
+          // Tambahkan opsi
+          const defaultOption = document.createElement('option');
+          defaultOption.textContent = 'Pilih Bola';
+          defaultOption.selected = true;
+          selectBola.appendChild(defaultOption);
+        
+          listMasterSelectBoll.forEach(y => {
+            const option = document.createElement('option');
+            option.value = y.price;
+            option.textContent = y.name;
+            selectBola.appendChild(option);
+          });
+        
+          // Buat elemen baru untuk row
+          const newElement = document.createElement('div');
+          newElement.id = `row_select_bola${length}`;
+          newElement.className = 'mb-2 row_select_bola';
+          newElement.innerHTML = `
+            <div class="d-flex align-items-center">
+              <div class="w-100">${selectBola.outerHTML}</div>
+              <div class="mx-2">x</div>
+              <div class="me-2">
+                <input type="number" min="1" value="1" id="qty_bola${length}" class="form-control">
+              </div>
+              <div>
+                <a id="btn_remove_row_bola${length}" href="javascript:void(0)">
+                  <i class='bx bx-x-circle fs-4 text-danger'></i>
+                </a>
+              </div>
+            </div>
+          `;
+        
+          list_select_bola.appendChild(newElement);
+        
+          document.getElementById(`btn_remove_row_bola${length}`).addEventListener('click', function(evt2) {
+            document.getElementById(`row_select_bola${length}`).remove();
+          });
+        });
+
+        document.getElementById('up_btn_tambah_row_bola').addEventListener('click', function (event) {
+          event.preventDefault();
+
+          const length = formUpdatePertandingan.querySelectorAll('.up_row_select_bola').length;
+        
+          // Buat elemen select dan opsi
+          const selectBola = document.createElement('select');
+          selectBola.id = `up_select_bola${length}`;
+          selectBola.className = 'form-select select_master_bola';
+          selectBola.required = true;
+        
+          // Tambahkan opsi
+          const defaultOption = document.createElement('option');
+          defaultOption.textContent = 'Pilih Bola';
+          defaultOption.selected = true;
+          selectBola.appendChild(defaultOption);
+        
+          listMasterSelectBoll.forEach(y => {
+            const option = document.createElement('option');
+            option.value = y.price;
+            option.textContent = y.name;
+            selectBola.appendChild(option);
+          });
+        
+          // Buat elemen baru untuk row
+          const newElement = document.createElement('div');
+          newElement.id = `up_row_select_bola${length}`;
+          newElement.className = 'mb-2 up_row_select_bola';
+          newElement.innerHTML = `
+            <div class="d-flex align-items-center">
+              <div class="w-100">${selectBola.outerHTML}</div>
+              <div class="mx-2">x</div>
+              <div class="me-2">
+                <input type="number" min="1" value="1" id="up_qty_bola${length}" class="form-control">
+              </div>
+              <div>
+                <a id="up_btn_remove_row_bola${length}" href="javascript:void(0)">
+                  <i class='bx bx-x-circle fs-4 text-danger'></i>
+                </a>
+              </div>
+            </div>
+          `;
+        
+          up_list_select_bola.appendChild(newElement);
+        
+          document.getElementById(`up_btn_remove_row_bola${length}`).addEventListener('click', function(evt2) {
+            document.getElementById(`up_row_select_bola${length}`).remove();
+          });
+        });
+
+        async function submitNewPertandingan(event){
+          event.preventDefault();
+    
+          modalAddMoreTanding.hide();
+          actionLoading('show');
+          try {
+            const pemain1_tim1 = formAddPertandingan.querySelector('#pemain1_tim1').value;
+            const pemain2_tim1 = formAddPertandingan.querySelector('#pemain2_tim1').value;
+            const pemain1_tim2 = formAddPertandingan.querySelector('#pemain1_tim2').value;
+            const pemain2_tim2 = formAddPertandingan.querySelector('#pemain2_tim2').value;
+
+            const tipe_score_permainan = formAddPertandingan.querySelector('#tipe_score_permainan').value;
+            const wasit_pertadingan = formAddPertandingan.querySelector('#wasit_pertadingan').value;
+
+            const row_select_bola = Array.from(formAddPertandingan.querySelectorAll('.row_select_bola'));
+            const listKok = row_select_bola.map((x, i) => {
+              const select_bola = x.querySelector(`#select_bola${i}`);
+              const qty_bola = x.querySelector(`#qty_bola${i}`).value;
+
+              return {
+                name: select_bola.options[select_bola.selectedIndex].text,
+                price: select_bola.value,
+                qty: parseInt(qty_bola),
+              }
+            });
+            
+            await addDoc(matchDetailsRef, {
+              p1tim1: pemain1_tim1,
+              p2tim1: pemain2_tim1,
+              p1tim2: pemain1_tim2,
+              p2tim2: pemain2_tim2,
+              skor_tim1: null,
+              skor_tim2: null,
+              tipe_scor: tipe_score_permainan,
+              wasit: wasit_pertadingan,
+              list_kok: listKok,
+              pemenang: null,
+              status_bayar: false,
+              tim_pemenang: null
+            });
+            openToast('toastNotif','msgToast','Pertandingan baru berhasil ditambahkan!', 'success');
+          } catch (e) {
+            openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+            console.error("Error adding user: ", e);
+          }
+          actionLoading('hide');
+        }
+        formAddPertandingan.addEventListener('submit', submitNewPertandingan);
+
+        async function submitUpdatePertandingan(event){
+          event.preventDefault();
+    
+          modalUpdateMoreTanding.hide();
+          actionLoading('show');
+          try {
+            const up_doc_id_pertandingan = formUpdatePertandingan.querySelector('#up_doc_id_pertandingan').value;
+
+            const up_pemain1_tim1 = formUpdatePertandingan.querySelector('#up_pemain1_tim1').value;
+            const up_pemain2_tim1 = formUpdatePertandingan.querySelector('#up_pemain2_tim1').value;
+            const up_pemain1_tim2 = formUpdatePertandingan.querySelector('#up_pemain1_tim2').value;
+            const up_pemain2_tim2 = formUpdatePertandingan.querySelector('#up_pemain2_tim2').value;
+            const up_skor_tim1 = formUpdatePertandingan.querySelector('#up_skor_tim1').value;
+            const up_skor_tim2 = formUpdatePertandingan.querySelector('#up_skor_tim2').value;
+
+            const up_tipe_score_permainan = formUpdatePertandingan.querySelector('#up_tipe_score_permainan').value;
+            const up_wasit_pertadingan = formUpdatePertandingan.querySelector('#up_wasit_pertadingan').value;
+
+            const up_pemenang = formUpdatePertandingan.querySelector('#up_pemenang').value;
+            const up_status_bayar = formUpdatePertandingan.querySelector('#up_status_bayar').value;
+
+            const row_select_bola = Array.from(formUpdatePertandingan.querySelectorAll('.up_row_select_bola'));
+            const listKok = row_select_bola.map((x, i) => {
+              const select_bola = x.querySelector(`#up_select_bola${i}`);
+              const qty_bola = x.querySelector(`#up_qty_bola${i}`).value;
+
+              return {
+                name: select_bola.options[select_bola.selectedIndex].text,
+                price: select_bola.value,
+                qty: parseInt(qty_bola),
+              }
+            });
+
+            const matchDocRef = doc(matchDetailsRef, up_doc_id_pertandingan);
+            
+            await updateDoc(matchDocRef, {
+              p1tim1: up_pemain1_tim1,
+              p2tim1: up_pemain2_tim1,
+              p1tim2: up_pemain1_tim2,
+              p2tim2: up_pemain2_tim2,
+              skor_tim1: up_skor_tim1,
+              skor_tim2: up_skor_tim2,
+              tipe_scor: up_tipe_score_permainan,
+              wasit: up_wasit_pertadingan,
+              list_kok: listKok,
+              pemenang: up_pemenang == '1' ? `${up_pemain1_tim1}-${up_pemain2_tim1}` : up_pemenang == '2' ? `${up_pemain1_tim2}-${up_pemain2_tim2}` : null,
+              status_bayar: up_status_bayar == '1' ? true : up_status_bayar == '0' ? false : null,
+              tim_pemenang: up_pemenang
+            });
+            openToast('toastNotif','msgToast','Pertandingan berhasil diperbaharui!', 'success');
+          } catch (e) {
+            openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+            console.error("Error adding user: ", e);
+          }
+          actionLoading('hide');
+        };
+        formUpdatePertandingan.addEventListener('submit', submitUpdatePertandingan);
+
+        formUpdatePertandingan.querySelector('#up_hapus_pertandingan').addEventListener('click', async function(event){
+          event.preventDefault();
+
+          const isConfirmed = confirm("Apakah Anda yakin ingin menghapus item ini?");
+          if (isConfirmed) {
+            modalUpdateMoreTanding.hide();
+            actionLoading('show');
+            const up_doc_id_pertandingan = formUpdatePertandingan.querySelector('#up_doc_id_pertandingan').value;
+            const matchDocRef = doc(matchDetailsRef, up_doc_id_pertandingan);
+          
+            try {
+              await deleteDoc(matchDocRef);
+              openToast('toastNotif','msgToast','Pertandingan telah berhasil dihapus!', 'success');
+            } catch (e) {
+              openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+              console.error("Error menghapus dokumen: ", e);
+            }
+            actionLoading('hide');
+          }
+        });
+
+        document.getElementById('hapus_data_tanding').addEventListener('click', async function(event){
+          event.preventDefault();
+
+          const isConfirmed = confirm("Apakah Anda yakin ingin menghapus item ini?");
+          if (isConfirmed) {
+            actionLoading('show');
+            try {
+              await deleteDoc(docRef);
+              openToast('toastNotif','msgToast','Pertandingan telah berhasil dihapus!', 'success');
+              setTimeout(()=>{
+                window.location.href = 'Home.html';
+              }, 1000);
+            } catch (e) {
+              openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+              console.error("Error menghapus dokumen: ", e);
+            }
+            actionLoading('hide');
+          }
+        })
+      } else {
+        console.log("Dokumen tidak ditemukan.");
+      }
+
+      actionLoading('hide');
+    }
+  </script>
+</body>
+</html>

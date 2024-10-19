@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badminton Advent | Home</title>
+
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="./css/loading_spinner.css">
+  <style>
+    .card-custom {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card-custom:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body style="background-image: url('./img/blob.svg'); height: 100vh; background-size: cover;">
+  <div id="loading_content" class="loading" style="display: block;">
+    <div class="lds-spinner">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <h6 class="mb-0">loading...</h6>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-transparant" style="z-index: 3;">
+    <div class="container">
+      <h6>
+        <a class="navbar-brand" href="#">Badminton System</a>
+      </h6>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item d-sm-none">
+            <a class="nav-link active" href="#">Tanding</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Pemain</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Bola Kok</a>
+          </li>
+          <li class="nav-item d-sm-none">
+            <a class="nav-link" href="#">Lapangan</a>
+          </li>
+        </ul>
+        <a href="index.html" class="btn btn-outline-primary" type="button">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pt-3">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-2 col-6 mb-4">
+          <a href="javascript:void(0)" id="card_btn_daftar_tanding" class="text-dark w-100 card card-custom card-custom text-center d-flex flex-column align-items-center justify-content-center p-2">
+            <div class="card-body">
+              <i class='bx bxs-flag-checkered fs-1'></i>
+              <h6 class="mb-0">Tanding</h6>
+            </div>
+          </a>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <a href="javascript:void(0)" id="card_btn_daftar_pemain" class="text-dark w-100 card card-custom card-custom text-center d-flex flex-column align-items-center justify-content-center p-2">
+            <div class="card-body">
+              <i class='bx bx-group fs-1'></i>
+              <h6 class="mb-0">Pemain</h6>
+            </div>
+          </a>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <a href="javascript:void(0)" id="card_btn_daftar_bola" class="text-dark w-100 card card-custom card-custom text-center d-flex flex-column align-items-center justify-content-center p-2">
+            <div class="card-body">
+              <i class='bx bx-football fs-1'></i>
+              <h6 class="mb-0">Bola Kok</h6>
+            </div>
+          </a>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <a href="javascript:void(0)" id="card_btn_daftar_lapangan" class="text-dark w-100 card card-custom card-custom text-center d-flex flex-column align-items-center justify-content-center p-2">
+            <div class="card-body">
+              <i class='bx bx-buildings fs-1'></i>
+              <h6 class="mb-0">Lapangan</h6>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <hr>
+
+    <div id="content_daftar_tanding" style="display: none;">
+      <h6 class="mb-3"><u>Daftar Tanding:</u></h6>
+      <div id="row_daftar_tanding" class="row"></div>
+    </div>
+
+    <div id="content_daftar_pemain" style="display: none;">
+      <h6 class="mb-3"><u>Daftar Pemain:</u></h6>
+      <div id="row_daftar_pemain" class="row"></div>
+    </div>
+
+    <div id="content_daftar_bola" style="display: none;">
+      <h6 class="mb-3"><u>Daftar Bola Kok:</u></h6>
+      <div id="row_daftar_bola" class="row"></div>
+    </div>
+
+    <div id="content_daftar_lapangan" style="display: none;">
+      <h6 class="mb-3"><u>Daftar Gor/Lapangan:</u></h6>
+      <div id="row_daftar_lapangan" class="row"></div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalAddMoreTanding" tabindex="-1" aria-labelledby="modalAddMoreTandingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Tanding</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitAddTanding">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="tanggal_tanding" class="form-label mb-1">Tanggal</label>
+              <input type="date" class="form-control" id="tanggal_tanding" required>
+            </div>
+            <div class="mb-3">
+              <label for="gor_tanding" class="form-label mb-1">Gor/Lapangan</label>
+              <select class="form-select" id="gor_tanding" required>
+                <option selected>Pilih gor/lapangan</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalAddMorePemain" tabindex="-1" aria-labelledby="modalAddMorePemainLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Pemain</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitAddPemain">
+          <div class="modal-body">
+            <input type="hidden" id="doc_id_pemain">
+            <div class="mb-3">
+              <label for="nama_pemain" class="form-label mb-1">Nama</label>
+              <input type="text" class="form-control" id="nama_pemain" placeholder="Masukkan nama pemain" required>
+            </div>
+            <div class="mb-3">
+              <label for="no_hp" class="form-label mb-1">No Phone</label>
+              <input type="text" class="form-control" id="no_hp" placeholder="Masukkan no ponsel">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalAddMoreBola" tabindex="-1" aria-labelledby="modalAddMoreBolaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Bola</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitAddBola">
+          <div class="modal-body">
+            <input type="hidden" id="doc_id_bola">
+            <div class="mb-3">
+              <label for="nama_bola" class="form-label mb-1">Nama</label>
+              <input type="text" class="form-control" id="nama_bola" placeholder="Masukkan nama bola" required>
+            </div>
+            <div class="mb-3">
+              <label for="price_bola" class="form-label mb-1">Harga Satuan</label>
+              <input type="number" class="form-control" id="price_bola" placeholder="Masukkan harga bola" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalAddMoreLapangan" tabindex="-1" aria-labelledby="modalAddMoreLapanganLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Lapangan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="submitAddLapangan">
+          <div class="modal-body">
+            <input type="hidden" id="doc_id_lapangan">
+            <div class="mb-3">
+              <label for="nama_lapangan" class="form-label mb-1">Nama</label>
+              <input type="text" class="form-control" id="nama_lapangan" placeholder="Masukkan nama lapangan" required>
+            </div>
+            <div class="mb-3">
+              <label for="location" class="form-label mb-1">Lokasi</label>
+              <input type="text" class="form-control" id="location" placeholder="Masukkan lokasi lapangan">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1">
+    <div id="toastNotif" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <div id="msgToast"></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  <script src="./js/functions.js"></script>
+  
+  <script src="./js/bootstrap.bundle.min.js"></script>
+
+  <script type="module">
+    import halpers from './js/halpers.js';
+    import { config } from './js/firebase_config.js';
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, where, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js'
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Initialize Firebase
+    const app = initializeApp(config);
+    const dbFirestore = getFirestore(app);
+
+    const keyActiveContent = 'active_content';
+    const btn_daftar_tanding = document.getElementById('card_btn_daftar_tanding');
+    const btn_daftar_pemain = document.getElementById('card_btn_daftar_pemain');
+    const btn_daftar_bola = document.getElementById('card_btn_daftar_bola');
+    const btn_daftar_lapangan = document.getElementById('card_btn_daftar_lapangan');
+
+    const content_daftar_tanding = document.getElementById('content_daftar_tanding');
+    const content_daftar_pemain = document.getElementById('content_daftar_pemain');
+    const content_daftar_bola = document.getElementById('content_daftar_bola');
+    const content_daftar_lapangan = document.getElementById('content_daftar_lapangan');
+
+    function hideAllContents() {
+      content_daftar_tanding.style.display = 'none';
+      content_daftar_pemain.style.display = 'none';
+      content_daftar_bola.style.display = 'none';
+      content_daftar_lapangan.style.display = 'none';
+    }
+
+    btn_daftar_tanding.addEventListener('click', async function() {
+      hideAllContents();
+      await loadDataTanding();
+      sessionStorage.setItem(keyActiveContent, 'content_daftar_tanding');
+    });
+
+    btn_daftar_pemain.addEventListener('click', async function() {
+      hideAllContents();
+      await loadDataPemain();
+      sessionStorage.setItem(keyActiveContent, 'content_daftar_pemain');
+    });
+    
+    btn_daftar_bola.addEventListener('click', async function() {
+      hideAllContents();
+      await loadDataBola();
+      sessionStorage.setItem(keyActiveContent, 'content_daftar_bola');
+    });
+    
+    btn_daftar_lapangan.addEventListener('click', async function() {
+      hideAllContents();
+      await loadDataGorLapangan();
+      sessionStorage.setItem(keyActiveContent, 'content_daftar_lapangan');
+    });
+
+    const activeContent = sessionStorage.getItem(keyActiveContent);
+    window.onload = function () {
+      if (activeContent) {
+        hideAllContents();
+
+        if(activeContent == 'content_daftar_tanding') loadDataTanding();
+        if(activeContent == 'content_daftar_pemain') loadDataPemain();
+        if(activeContent == 'content_daftar_bola') loadDataBola();
+        if(activeContent == 'content_daftar_lapangan') loadDataGorLapangan();
+      } else {
+        loadDataTanding();
+        content_daftar_tanding.style.display = 'block';
+        sessionStorage.setItem(keyActiveContent, 'content_daftar_tanding');
+      }
+    };
+    
+    async function loadDataTanding(){
+      actionLoading('show');
+      const mGorRefs = collection(dbFirestore, 'm_lapangan');
+      onSnapshot(mGorRefs, (snapshot) => {
+        const allSelectPemain = document.getElementById('gor_tanding');
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const newOpt = `<option value="${data.name}">${data.name}</option>`;
+          allSelectPemain.innerHTML += newOpt;
+        });
+      });
+      
+      const tandingRefs = collection(dbFirestore, 'tanding');
+      var modalAddMoreTanding = new bootstrap.Modal(document.getElementById('modalAddMoreTanding'));
+      await onSnapshot(tandingRefs, (snapshot) => {
+        const rowContent = document.getElementById('row_daftar_tanding');
+        const firstRow = `
+          <div class="col-md-3 mb-3 d-flex flex-column">
+            <div id="cardAddMoreTading" class="card card-custom text-center" style="cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+              <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                <div>
+                  <i class='bx bx-add-to-queue fs-3'></i>
+                  <div>Tambah</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        rowContent.innerHTML = firstRow;
+  
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const cardTemplate = `
+            <div class="col-md-3 mb-3 d-flex flex-column">
+              <a href="List_Pertanding.html?documentid=${doc.id}" documentid="${doc.id}" class="card card-custom text-dark" style="text-decoration: none; cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                  <div>
+                    <div class="mb-1">Tanggal: ${data.tanggal}</div>
+                    <div>Gor/Lapangan: ${data.gor_lapangan}</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+  
+          rowContent.innerHTML += cardTemplate;
+        });
+        
+        var openModalBtn = document.getElementById('cardAddMoreTading');
+        openModalBtn.addEventListener('click', function () {
+          modalAddMoreTanding.show();
+        });
+      });
+  
+      const formAddTanding = document.getElementById('submitAddTanding');
+      async function submitNewTanding(event){
+        event.preventDefault();
+  
+        modalAddMoreTanding.hide();
+        actionLoading('show');
+        try {
+          const tanggal = formAddTanding.querySelector('#tanggal_tanding').value;
+          const gorLapangan = formAddTanding.querySelector('#gor_tanding').value;
+          await addDoc(tandingRefs, {
+            tanggal: tanggal,
+            gor_lapangan: gorLapangan,
+          });
+          openToast('toastNotif','msgToast','Jadwal tanding berhasil ditambahkan!', 'success');
+        } catch (e) {
+          openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+          console.error("Error adding user: ", e);
+        }
+        actionLoading('hide');
+      }
+      formAddTanding.addEventListener('submit', submitNewTanding);
+      
+      content_daftar_tanding.style.display = 'block';
+      actionLoading('hide');
+    };
+
+    async function loadDataPemain(){
+      actionLoading('show');
+      const elmentModal = document.getElementById('modalAddMorePemain');
+      var modalAddMorePemain = new bootstrap.Modal(elmentModal);
+      const formAdd = elmentModal.querySelector('#submitAddPemain');
+      
+      const mGorRefs = collection(dbFirestore, 'm_pemain');
+      await onSnapshot(mGorRefs, (snapshot) => {
+        const rowContent = document.getElementById('row_daftar_pemain');
+        const firstRow = `
+          <div class="col-md-3 mb-3 d-flex flex-column">
+            <div id="cardAddMorePemain" class="card card-custom text-center" style="cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+              <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                <div>
+                  <i class='bx bx-add-to-queue fs-3'></i>
+                  <div>Tambah</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        rowContent.innerHTML = firstRow;
+        
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const cardTemplate = `
+            <div class="col-md-3 mb-3 d-flex flex-column">
+              <a documentid="${doc.id}" name="${data.name}" phone="${data.phone}"
+               class="card card-custom text-dark modal_update_detail_pemain" style="text-decoration: none; cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                  <div>
+                    <i class='bx bx-user-circle fs-3'></i>
+                  </div>
+                  <div class="ms-2">
+                    <h6 class="mb-0">${data.name}</h6>
+                    <div>${data.phone}</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+  
+          rowContent.innerHTML += cardTemplate;
+
+          var cardDetail = document.getElementsByClassName("modal_update_detail_pemain");
+          for (var i = 0; i < cardDetail.length; i++) {
+            const elm = cardDetail[i];
+            elm.addEventListener('click', async function(event){
+              event.preventDefault();
+
+              const attr_documentid = elm.getAttribute('documentid');
+              const attr_name = elm.getAttribute('name');
+              const attr_phone = elm.getAttribute('phone');
+              
+              formAdd.querySelector('#doc_id_pemain').value = attr_documentid;
+              formAdd.querySelector('#nama_pemain').value = attr_name;
+              formAdd.querySelector('#no_hp').value = attr_phone;
+              
+              modalAddMorePemain.show();
+            });
+          };
+        });
+        
+        actionLoading('hide');
+        content_daftar_pemain.style.display = 'block';
+        
+        var openModalBtn = document.getElementById('cardAddMorePemain');
+        openModalBtn.addEventListener('click', function () {
+          formAdd.querySelector('#nama_pemain').value = '';
+          formAdd.querySelector('#no_hp').value = '';
+          formAdd.querySelector('#doc_id_pemain').value = '';
+          modalAddMorePemain.show();
+        });
+
+        formAdd.addEventListener('submit', async function(event){
+          event.preventDefault();
+
+          modalAddMorePemain.hide();
+          actionLoading('show');
+          try {
+            const doc_id = formAdd.querySelector('#doc_id_pemain').value;
+            const nama_pemain = formAdd.querySelector('#nama_pemain').value;
+            const no_hp = formAdd.querySelector('#no_hp').value;
+
+            const setObj = {
+              name: nama_pemain,
+              phone: no_hp,
+            }
+
+            if(doc_id && doc_id.trim() != ''){
+              const matchDocRef = doc(mGorRefs, doc_id);
+              await updateDoc(matchDocRef, setObj);
+              openToast('toastNotif','msgToast','Pemain telah berhasil diperbaharui!', 'success');
+            }else{
+              await addDoc(mGorRefs, setObj);
+              openToast('toastNotif','msgToast','Pemain baru berhasil ditambahkan!', 'success');
+            }
+          } catch (e) {
+            openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+            console.error("Error adding user: ", e);
+          }
+          actionLoading('hide');
+        });
+      });
+    };
+
+    async function loadDataBola(){
+      actionLoading('show');
+      const elmentModal = document.getElementById('modalAddMoreBola');
+      var modalAddMoreBola = new bootstrap.Modal(elmentModal);
+      const formAdd = elmentModal.querySelector('#submitAddBola');
+      
+      const mColRefs = collection(dbFirestore, 'm_bola');
+      await onSnapshot(mColRefs, (snapshot) => {
+        const rowContent = document.getElementById('row_daftar_bola');
+        const firstRow = `
+          <div class="col-md-3 mb-3 d-flex flex-column">
+            <div id="cardAddMoreBola" class="card card-custom text-center" style="cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+              <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                <div>
+                  <i class='bx bx-add-to-queue fs-3'></i>
+                  <div>Tambah</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        rowContent.innerHTML = firstRow;
+
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const cardTemplate = `
+            <div class="col-md-3 mb-3 d-flex flex-column">
+              <a documentid="${doc.id}" name="${data.name}" price="${data.price}" 
+              class="card card-custom text-dark modal_update_detail_bola" style="text-decoration: none; cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                  <div>
+                    <i class='bx bx-football fs-3'></i>
+                  </div>
+                  <div class="ms-2">
+                    <h6 class="mb-0">Merek: ${data.name}</h6>
+                    <div>Harga: Rp ${data.price}/kok</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+  
+          rowContent.innerHTML += cardTemplate;
+
+          var cardDetail = document.getElementsByClassName("modal_update_detail_bola");
+          for (var i = 0; i < cardDetail.length; i++) {
+            const elm = cardDetail[i];
+            elm.addEventListener('click', async function(event){
+              event.preventDefault();
+
+              const attr_documentid = elm.getAttribute('documentid');
+              const attr_name = elm.getAttribute('name');
+              const attr_price = elm.getAttribute('price');
+              
+              formAdd.querySelector('#doc_id_bola').value = attr_documentid;
+              formAdd.querySelector('#nama_bola').value = attr_name;
+              formAdd.querySelector('#price_bola').value = attr_price;
+              
+              modalAddMoreBola.show();
+            });
+          };
+        });
+        
+        actionLoading('hide');
+        content_daftar_bola.style.display = 'block';
+        
+        var openModalBtn = document.getElementById('cardAddMoreBola');
+        openModalBtn.addEventListener('click', function () {
+          formAdd.querySelector('#nama_bola').value = '';
+          formAdd.querySelector('#price_bola').value = '';
+          formAdd.querySelector('#doc_id_bola').value = '';
+          modalAddMoreBola.show();
+        });
+
+        formAdd.addEventListener('submit', async function(event){
+          event.preventDefault();
+
+          modalAddMoreBola.hide();
+          actionLoading('show');
+          try {
+            const doc_id = formAdd.querySelector('#doc_id_bola').value;
+            const nama_bola = formAdd.querySelector('#nama_bola').value;
+            const price_bola = formAdd.querySelector('#price_bola').value;
+
+            const setObj = {
+              name: nama_bola,
+              price: price_bola,
+            }
+
+            if(doc_id && doc_id.trim() != ''){
+              const matchDocRef = doc(mColRefs, doc_id);
+              await updateDoc(matchDocRef, setObj);
+              openToast('toastNotif','msgToast','Bola telah berhasil diperbaharui!', 'success');
+            }else{
+              await addDoc(mColRefs, setObj);
+              openToast('toastNotif','msgToast','Bola baru berhasil ditambahkan!', 'success');
+            }
+          } catch (e) {
+            openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+            console.error("Error adding user: ", e);
+          }
+          actionLoading('hide');
+        });
+      });
+    };
+    
+    async function loadDataGorLapangan(){
+      actionLoading('show');
+      const elmentModal = document.getElementById('modalAddMoreLapangan');
+      var modalAddMoreLapangan = new bootstrap.Modal(elmentModal);
+      const formAdd = elmentModal.querySelector('#submitAddLapangan');
+
+      const mColRefs = collection(dbFirestore, 'm_lapangan');
+      await onSnapshot(mColRefs, (snapshot) => {
+        const rowContent = document.getElementById('row_daftar_lapangan');
+        const firstRow = `
+          <div class="col-md-3 mb-3 d-flex flex-column">
+            <div id="cardAddMoreLapangan" class="card card-custom text-center" style="cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+              <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                <div>
+                  <i class='bx bx-add-to-queue fs-3'></i>
+                  <div>Tambah</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        rowContent.innerHTML = firstRow;
+
+        snapshot.docs.forEach(doc => {
+          const data = doc.data();
+          const cardTemplate = `
+            <div class="col-md-3 mb-3 d-flex flex-column">
+              <a documentid="${doc.id}" name="${data.name}" location="${data.location}" 
+              class="card card-custom text-dark modal_update_detail_lapangan" style="text-decoration: none; cursor: pointer; background: transparent; border: 2px solid rgba(0,0,0,.125); flex-grow: 1;">
+                <div class="card-body d-flex align-items-center justify-content-center" style="height: 100%;">
+                  <div>
+                    <i class='bx bx-buildings fs-3'></i>
+                  </div>
+                  <div class="ms-2">
+                    <h6 class="mb-0">Gor: ${data.name}</h6>
+                    <div>Lokasi: ${data.location}</div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+  
+          rowContent.innerHTML += cardTemplate;
+
+          var cardDetail = document.getElementsByClassName("modal_update_detail_lapangan");
+          for (var i = 0; i < cardDetail.length; i++) {
+            const elm = cardDetail[i];
+            elm.addEventListener('click', async function(event){
+              event.preventDefault();
+
+              const attr_documentid = elm.getAttribute('documentid');
+              const attr_name = elm.getAttribute('name');
+              const attr_location = elm.getAttribute('location');
+              
+              formAdd.querySelector('#doc_id_lapangan').value = attr_documentid;
+              formAdd.querySelector('#nama_lapangan').value = attr_name;
+              formAdd.querySelector('#location').value = attr_location;
+              
+              modalAddMoreLapangan.show();
+            });
+          };
+        });
+        
+        actionLoading('hide');
+        content_daftar_lapangan.style.display = 'block';
+        
+        var openModalBtn = document.getElementById('cardAddMoreLapangan');
+        openModalBtn.addEventListener('click', function () {
+          formAdd.querySelector('#nama_lapangan').value = '';
+          formAdd.querySelector('#location').value = '';
+          formAdd.querySelector('#doc_id_lapangan').value = '';
+          modalAddMoreLapangan.show();
+        });
+
+        formAdd.addEventListener('submit', async function(event){
+          event.preventDefault();
+
+          modalAddMoreLapangan.hide();
+          actionLoading('show');
+          try {
+            const doc_id = formAdd.querySelector('#doc_id_lapangan').value;
+            const nama_lapangan = formAdd.querySelector('#nama_lapangan').value;
+            const location = formAdd.querySelector('#location').value;
+
+            const setObj = {
+              name: nama_lapangan,
+              location: location,
+            }
+
+            if(doc_id && doc_id.trim() != ''){
+              const matchDocRef = doc(mColRefs, doc_id);
+              await updateDoc(matchDocRef, setObj);
+              openToast('toastNotif','msgToast','Lapangan telah berhasil diperbaharui!', 'success');
+            }else{
+              await addDoc(mColRefs, setObj);
+              openToast('toastNotif','msgToast','Lapangan baru berhasil ditambahkan!', 'success');
+            }
+          } catch (e) {
+            openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+            console.error("Error adding user: ", e);
+          }
+          actionLoading('hide');
+        });
+      });
+    };
+  </script>
+</body>
+</html>

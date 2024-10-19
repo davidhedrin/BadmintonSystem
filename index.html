@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badminton Advent</title>
+
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="./css/loading_spinner.css">
+</head>
+<body>
+  <div id="loading_content" class="loading" style="display: none;">
+    <div class="lds-spinner">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <h6 class="mb-0">loading...</h6>
+  </div>
+  
+  <div style="background-image: url('./img/blob.svg'); height: 100vh; background-size: cover;" class="d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-8 col-md-4 m-auto">
+          <h3 class="text-center pb-2">Badminton System</h3>
+          <div class="card shadow-lg">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-2">
+                <div>
+                  <i class='bx bx-log-in-circle fs-1'></i>
+                </div>
+                <div class="ms-1">
+                  <h4>Login</h4>
+                </div>
+              </div>
+      
+              <form id="loginForm" class="w-100">
+                <div class="mb-2">
+                  <label for="username_login" class="form-label mb-1">Username</label>
+                  <input type="text" class="form-control" id="username_login" placeholder="Masukkan username" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password_login" class="form-label mb-1">Password</label>
+                  <input type="password" class="form-control" id="password_login" placeholder="Masukkan password" required>
+                </div>
+                <button type="submit" class="px-4 btn btn-primary">Masuk</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </div>
+
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toastNotif" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <div id="msgToast"></div>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+  <script src="./js/functions.js"></script>
+  
+  <script src="./js/bootstrap.bundle.min.js"></script>
+
+  <script type="module">
+    import halpers from './js/halpers.js';
+    import { config } from './js/firebase_config.js';
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js'
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Initialize Firebase
+    const app = initializeApp(config);
+    const dbFirestore = getFirestore(app);
+    
+    const usersRef = collection(dbFirestore, 'users');
+    onSnapshot(usersRef, (snapshot) => {
+      const usersList = snapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() };
+      });
+    });
+
+    async function submitLogin(event){
+      event.preventDefault();
+      const username = document.getElementById('username_login').value;
+      const password = document.getElementById('password_login').value;
+
+      const queryFindUser = query(
+        usersRef,
+        where("username", "==", username),
+        where("password", "==", password) 
+      );
+  
+      try {
+        const querySnapshot = await getDocs(queryFindUser);
+        if (!querySnapshot.empty) {
+          let user;
+          querySnapshot.forEach((doc) => {
+            user = ({id: doc.id, ...doc.data()})
+          });
+          
+          const encUser = await halpers.encryptData(user);
+          localStorage.setItem('user_login', encUser);
+          window.location.href = 'Home.html';
+        } else {
+          openToast('toastNotif','msgToast','Username dan password tidak ditemukan!', 'warning');
+        }
+      } catch (e) {
+        openToast('toastNotif','msgToast','Terjadi kesalahan, ulangi beberapa saat lagi!', 'warning');
+        console.error("Error getting user:", e);
+      }
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', submitLogin);
+  </script>
+</body>
+</html>
